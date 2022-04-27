@@ -33,19 +33,34 @@ By author Id
 By category
 List of blogs that have a specific tag
 List of blogs that have a specific subcategory example of a query url: blogs?filtername=filtervalue&f2=fv2
+
+
+
 PUT /blogs/:blogId
 Updates a blog by changing the its title, body, adding tags, adding a subcategory. (Assuming tag and subcategory received in body is need to be added)
 Updates a blog by changing its publish status i.e. adds publishedAt date and set published to true
 Check if the blogId exists (must have isDeleted false). If it doesn't, return an HTTP status 404 with a response body like this
 Return an HTTP status 200 if updated successfully with a body like this
 Also make sure in the response you return the updated blog document.
+
+
 DELETE /blogs/:blogId
 Check if the blogId exists( and is not deleted). If it does, mark it deleted and return an HTTP status 200 without any response body.
 If the blog document doesn't exist then return an HTTP status of 404 with a body like this
+
+
 DELETE /blogs?queryParams
 Delete blog documents by category, authorid, tag name, subcategory name, unpublished
 If the blog document doesn't exist then return an HTTP status of 404 with a body like this
+
+
+
+
+
 Phase II
+
+
+
 Add authentication and authroisation feature
 POST /login
 Allow an author to login with their email and password. On a successful login attempt return a JWT token contatining the authorId
