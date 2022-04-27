@@ -19,11 +19,7 @@ exports.validateAuthor = [check('fname')
     .not()
     .isEmpty().withMessage('title is Missing')
     .isLength({ min: 2, max: 30 })
-<<<<<<< HEAD:src/middlewares/validations.js
-    .withMessage(' titile must be within 3 to 30 characters long'),
-=======
     .withMessage(' titile must be within 2 to 30 characters long'),
->>>>>>> 1e73c767f4bdbfb06d338d10fe3382ddf40a001e:src/middlewares/authorValidations.js
 
     check('email')
     .normalizeEmail()

@@ -1,4 +1,4 @@
-const { check } = requrie("express-validator")
+const { check, validationResult } = requrie("express-validator")
 
 exports.validateBlog = [
     check('title')
@@ -40,11 +40,12 @@ exports.validateBlog = [
     .trim()
     .not()
     .isEmpty()
-    .withMessage('subcategory must be present'),
-
-    check(' deletedAt')
-    .trim()
-    .isEmpty()
-    
-
+    .withMessage('subcategory must be present')
 ]
+
+exports.validatedblog = function (req,res,next){
+    const error = validationResult(req).array()
+    if(!error.length) return next()
+
+    res.status(400).send({status : false, msg: error[0].msg})
+}
