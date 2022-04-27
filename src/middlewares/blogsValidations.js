@@ -35,4 +35,16 @@ exports.validateBlog = [
     .not()
     .isEmpty()
     .withMessage('Category must be present'),
+
+    check('subcategory')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('subcategory must be present'),
+
+    check(' deletedAt')
+    .trim()
+    .isEmpty()
+    
+
 ]
