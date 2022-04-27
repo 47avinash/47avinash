@@ -1,4 +1,4 @@
-const { check, validationResult } = requrie("express-validator")
+const { check, validationResult } = require("express-validator")
 
 exports.validateBlog = [
     check('title')
@@ -28,7 +28,8 @@ exports.validateBlog = [
     check('tags')
     .trim()
     .not()
-    .isEmpty('Tags must be present'),
+    .isEmpty()
+    .withMessage('tags must be present'),
 
     check('category')
     .trim()
