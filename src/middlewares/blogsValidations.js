@@ -41,7 +41,15 @@ exports.validateBlog = [
     .trim()
     .not()
     .isEmpty()
-    .withMessage('subcategory must be present')
+    .withMessage('subcategory must be present'),
+
+    check('blockId')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('Blog Id is required')
+    .isLength({equal : 24})
+    .withMessage('Please Provide a valid blog Id')
 ]
 
 exports.validatedblog = function (req,res,next){
