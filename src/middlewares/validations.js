@@ -18,7 +18,7 @@ exports.validateAuthor = [check('fname')
     .trim()
     .not()
     .isEmpty().withMessage('title is Missing')
-    .isLength({ min: 3, max: 30 })
+    .isLength({ min: 2, max: 30 })
     .withMessage(' titile must be within 3 to 30 characters long'),
 
     check('email')
