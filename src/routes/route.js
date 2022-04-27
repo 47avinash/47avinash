@@ -10,4 +10,6 @@ router.post("/authors", validateAuthor, validate, authorController.createAuthor)
 
 router.post("/blogs", validateBlog, validatedblog, blogController.createBlog)
 
+router.get("/blogs", validateBlog, validatedblog, blogController.getBlogs)
+
 module.exports = router;
