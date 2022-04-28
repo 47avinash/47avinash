@@ -201,7 +201,7 @@ const blogByQuery = async function (req, res) {
     const {authorId, tags, category, subcategory} = data
     
     if(!mongoose.isValidObjectId(authorId)){
-      return res.status(400).send({status : false, msg})
+      return res.status(400).send({status : false, msg:" this is not a valid author Id"})
     }
     
     if (tags) {
