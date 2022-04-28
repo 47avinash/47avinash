@@ -1,16 +1,20 @@
 const { default: mongoose } = require("mongoose")
 const authorModel = require("../models/authorModel")
 const blogModel = require("../models/blogModel")
+const jwt = require("jsonwebtoken")
+const req = require("express/lib/request")
 
+let secretKey = 'I thought i was smarter to do this-yet i did it anyway'
+let token = req.header["x-api-key"]
+const decodeToken = jwt.verify(token,  secretKey)
 
 const createBlog = async function (req, res) {
   try {
     let blog = req.body;
-
-    let author = await authorModel.find({ _id: blog.authorId })
-
-    if (author.length === 0) {
-      return res.status(404).send({ status: false, msg: "Author does not exist" })
+    let authorId = req.body.authorId
+    
+    if(decodeToken.authorId != authorId){
+      return res.status(400).send({status:false, msg :"You are not authorized to do this"})
     }
 
     let blogCreated = await blogModel.create(blog);

@@ -63,7 +63,10 @@ const logInUser = async function (req, res){
 
      res.setHeader("x-api-key", token)
      res.status(200).send({status : true, msg : "logIn Successfull", data : token})
-
+    //  let authorDetails = await authorModel.findById(authorId)
+    //  if(!authorDetails){
+        //  return res.status(400).send({status : false, message: "No such Author exist"})
+    //  }
     }
     catch(err){
         return res.status(500).send({status: false, err : err.message})
