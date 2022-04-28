@@ -75,7 +75,7 @@ const putBlog = async function (req, res) {
     //     return res.status(400).send({status: false, msg : "This is not a valid BlogId"})
     //   }
 
-      if(! await mongoose.isValidObjectId(verifyBlogId)){
+      if(! mongoose.isValidObjectId(verifyBlogId)){
         return res.status(400).send({status: false, msg : "This is not a valid BlogId"})
       }
 
