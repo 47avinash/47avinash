@@ -190,70 +190,22 @@ const deleteBlog = async function (req, res) {
 }
 
 
-
-
-
-
-
-const blogByQuery = async function (req, res) {
+const blogByQuery = async (req, res) =>{
   try {
-    let data = req.query 
-    const {authorId, tags, category, subcategory} = data
-    
-    if(!mongoose.isValidObjectId(authorId)){
-      return res.status(400).send({status : false, msg:" this is not a valid author Id"})
-    }
-    
-    if (tags) {
-        let check = tags.length
-        if (check === -1 || check == undefined || check == null) {
-          return res.status(400).send({ status: false, msg: 'this is not a valid tag' })
-        }
-  
-        if (!await blogModel.exist(tags)) {
-          return res.status(400).send({ status: false, msg: 'no blog with this tag exist' })
-        }
-      }
-
-    if (category) {
-        let verifyCategory = await blogModel.findOne({ category: category })
-        if (!verifyCategory) {
-          return res.status(400).send({ status: false, msg: 'No such category  exist' })
-        }
-    }
-  
-    if (subcategory) {
-        let check = subcategory.length
-        if (check === -1 || check === undefined || check === null) {
-          return res.status(400).send({ status: false, msg: 'this is not a valid subcategory' })
-        }
-  
-        if (!await blogModel.exist(subcategory)) {
-          return res.status(400).send({ status: false, msg: 'no blog with this subcategory exist' })
-        }
-      }
-    
-    let findBlog = await blogModel.findById({_id : req.query.blogId})
-
-      if(findBlog.isdeleted===true){
-       return res.status(404).send({status:false,msg:'this blog has been deleted by user'})
-      }
-
-    let deletedBlog = await blogModel.updateMany(
-      { $in: data },
-      { $set: { isdeleted: true }, deletedAt: Date.now() },
-      { new: true }
-    )
-
-    if (deletedBlog) {
-      return res.status(200).send({ status: true, msg: "Document deleted successfully", deletedDoument: deletedBlog })
-    } else {
-      return res.status(404).send({ status: false, msg: "Could not find any document related to your query" })
-    }
+    const data = req.query;
+    if (Object.keys(data) == 0)    
+      return res.status(400).send({ status: false, message: "No input provided" });
+    const deleteByQuery = await blogModel.updateMany(data,{ isDeleted: true, deletedAt: new Date() },
+      { new: true }               
+    );
+    if (!deleteByQuery)
+      return res.status(404).send({ status: false, message: "No such blog found" });
+    res.status(200).send({ status: true, message: deleteByQuery });
+  } catch (error) {
+    res.status(500).send({ status: false, message: error.message });
   }
-  catch (err) {
-    res.status(500).send({ status: false, msg: err.message })
-  }
-}
+};
+
+
 
 module.exports = { createBlog, getBlogs, putBlog, deleteBlog, blogByQuery }
