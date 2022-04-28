@@ -7,12 +7,11 @@ const createAuthor = async function(req,res){
         const {email} = requestData
           const verifyEmail =  validator.validate(email)
       
-          if(!verifyEmail){
-          return res.status(400).send({status:false,msg:'this is not a valid email'})
-           }
+        if(!verifyEmail){
+            return res.status(400).send({status:false,msg:'this is not a valid email'})
+            }
 
-
-         if( await authorModel.findOne({email: email})){
+        if( await authorModel.findOne({email: email})){
             return res.status(400).send({status : false, msg : "this email is already being used, please try login-in"})
             }
 

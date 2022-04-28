@@ -18,8 +18,8 @@ exports.validateAuthor = [check('fname')
     .trim()
     .not()
     .isEmpty().withMessage('title is Missing')
-    .isLength({ min: 2, max: 30 })
-    .withMessage(' titile must be within 2 to 30 characters long'),
+    .isLength({ min: 2, max: 4 })
+    .withMessage(' titile must be within 2 to 4 characters long'),
 
     check('email')
     .normalizeEmail()
@@ -31,7 +31,7 @@ exports.validateAuthor = [check('fname')
     .not()
     .isEmpty().withMessage('password is Missing')
     .isLength({ min: 6, max: 16})
-    .withMessage(' Password must be within 3 to 16 characters long')]
+    .withMessage(' Password must be within 6 to 16 characters long')]
 
 exports.validate = function (req,res,next){
         const error = validationResult(req).array()

@@ -10,7 +10,7 @@ router.post("/authors", validateAuthor, validate, authorController.createAuthor)
 
 router.post("/blogs", validateBlog, validatedblog, blogController.createBlog)
 
-router.get("/blogs", validateBlog, validatedblog, blogController.getBlogs)
+router.get("/blogs", blogController.getBlogs)
 
 router.put("/blogs/:blogId",  blogController.putBlog)
 
