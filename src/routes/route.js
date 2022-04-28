@@ -8,6 +8,8 @@ const { validatedblog, validateBlog } = require('../middlewares/blogsValidations
 
 router.post("/authors", validateAuthor, validate, authorController.createAuthor)
 
+router.post("/login", authorController.logInUser)
+
 router.post("/blogs", validateBlog, validatedblog, blogController.createBlog)
 
 router.get("/blogs", blogController.getBlogs)
@@ -17,4 +19,6 @@ router.put("/blogs/:blogId",  blogController.putBlog)
 router.delete("/blogs/:blogId",  blogController.deleteBlog )
 
 router.delete("/blogs", blogController.blogByQuery)
+
+
 module.exports = router;

@@ -1,5 +1,6 @@
 const authorModel = require("../models/authorModel")
 const validator = require('email-validator')
+const jwt = require("jsonwebtoken")
 
 const createAuthor = async function(req,res){
     try{
@@ -25,4 +26,48 @@ const createAuthor = async function(req,res){
     }
 }
 
-module.exports = {createAuthor}
+
+const logInUser = async function (req, res){
+    try{ 
+
+     const username = req.body.email
+     const password = req.body.password
+
+     const verify = validator.validate(username)
+
+     if(!verify){
+         return res.status(400).send({status: false, msg : "This is not a Valid Username"})
+     }
+
+     if(!await authorModel.findOne({email : username})){
+         return res.status(400).send({status : false, msg : "No user exists with this email"})
+     }
+
+     if(!password){
+         return res.status(400).send({status : false, msg : "Password is required"})
+     }
+      
+     let author =  await authorModel.findOne({email : username, password: password})
+
+     if(!author){
+         return res.status(400).send({status : false, msg: "Password is wrong"})
+     } 
+
+      
+      let secretKey = 'I thought i was smarter to do this-yet i did it anyway'
+      let token = jwt.sign({
+         authorId : author._id,
+         project : "blogging-site",
+         batch : "uranium",
+         group : 49
+     }, secretKey);
+
+     res.setHeader("x-auth-token", token)
+     res.status(200).send({status : true, msg : "logIn Successfull", data : token})
+
+    }
+    catch(err){
+        return res.status(500).send({status: false, err : err.message})
+    }
+}
+module.exports = {createAuthor, logInUser}
