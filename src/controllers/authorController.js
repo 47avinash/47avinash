@@ -53,7 +53,6 @@ const logInUser = async function (req, res){
          return res.status(400).send({status : false, msg: "Password is wrong"})
      } 
 
-      
       let secretKey = 'I thought i was smarter to do this-yet i did it anyway'
       let token = jwt.sign({
          authorId : author._id,
@@ -62,7 +61,7 @@ const logInUser = async function (req, res){
          group : 49
      }, secretKey);
 
-     res.setHeader("x-auth-token", token)
+     res.setHeader("x-api-key", token)
      res.status(200).send({status : true, msg : "logIn Successfull", data : token})
 
     }
