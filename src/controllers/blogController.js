@@ -1,12 +1,6 @@
 const { default: mongoose } = require("mongoose")
-const authorModel = require("../models/authorModel")
 const blogModel = require("../models/blogModel")
-const jwt = require("jsonwebtoken")
-const req = require("express/lib/request")
 
-const secretKey = 'I thought i was smarter to do this-yet i did it anyway'
-const token = req.header["x-api-key"]
-const decodeToken = jwt.verify(token, secretKey)
 
 const createBlog = async function (req, res) {
   try {
@@ -17,9 +11,6 @@ const createBlog = async function (req, res) {
         return res.status(400).send({status : false, msg : "this is not a valid user id"})
     }
 
-    if(decodeToken.authorId != authorId){
-      return res.status(400).send({status:false, msg :"You are not authorized to do this"})
-    }
 
     let blogCreated = await blogModel.create(blog);
 
@@ -64,9 +55,7 @@ const getBlogs = async function (req, res) {
       }
     } 
 
-    if(decodeToken.authorId != data.authorId){
-        return res.status(400).send({status:false, msg :"You are not authorized to do this"})
-      }
+
 
     if (category) {
       let verifyCategory = await blogModel.findOne({ category: category })
@@ -134,14 +123,14 @@ const putBlog = async function (req, res) {
         return res.status(400).send({status: false, msg: "Please provide a Valid blogId"})
     }
 
+    if(!authorId){
+      return res.status(400).send({status:false, msg : "The authorId must be present"})
+    }
+
     if(!mongoose.isValidObjectId(authorId)){
         return res.status(400).send({status: false, msg: "Please provide a Valid authorId"})
     }
     
-    if(decodeToken.authorId != data.authorId){
-        return res.status(400).send({status:false, msg :"You are not authorized to do this"})
-    }
-
     if(!xyz){
         return res.status(400).send({status: false, msg : "No Blog with this Id exist"})
     }

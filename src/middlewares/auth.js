@@ -14,6 +14,12 @@ const authorization = async function (req,res,next){
         if(!decodeToken){
             return res.status(400).send({status : false, msg : "this is an invalid token"})
         }
+
+        let authorId = req.body.authorId || req.params.authorId || req.query.authorId
+        if(decodeToken.authorId != authorId){
+            return res.status(400).send({status: false, msg : "You aren not authorized to do this"})
+        }
+        
         next()
     }
 
