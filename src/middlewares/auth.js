@@ -10,15 +10,16 @@ const authorization = async function (req,res,next){
             return res.status(400).send({status : false, msg : "header is required"})
         }
 
-        let decodeToken = jwt.verify(token , secretKey)
-
+        let decodeToken = jwt.verify(token, secretKey)
         if(!decodeToken){
             return res.status(400).send({status : false, msg : "this is an invalid token"})
         }
-
-        
+        next()
     }
+
     catch(err){
       return res.status(500).send({status : false, err : err.message})
     }
 }
+
+module.exports = {authorization}
