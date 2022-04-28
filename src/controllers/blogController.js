@@ -5,12 +5,6 @@ const blogModel = require("../models/blogModel")
 const createBlog = async function (req, res) {
   try {
     let blog = req.body;
-    let authorId = req.body.authorId
-    
-    if(!mongoose.isValidObjectId(authorId)){
-        return res.status(400).send({status : false, msg : "this is not a valid user id"})
-    }
-
 
     let blogCreated = await blogModel.create(blog);
 
@@ -45,17 +39,8 @@ const getBlogs = async function (req, res) {
       isPublished: true,
       ...data,
     };
-    const { authorId, category, subcategory, tags } = data
+    const { category, subcategory, tags } = data
     
-    if (authorId) {
-      let verifyAuthor = mongoose.isValidObjectId(authorId)
-
-      if(!verifyAuthor) {
-        return res.status(400).send({ status: false, msg: 'this is not a valid authorId' })
-      }
-    } 
-
-
 
     if (category) {
       let verifyCategory = await blogModel.findOne({ category: category })
@@ -126,10 +111,6 @@ const putBlog = async function (req, res) {
     if(!authorId){
       return res.status(400).send({status:false, msg : "The authorId must be present"})
     }
-
-    if(!mongoose.isValidObjectId(authorId)){
-        return res.status(400).send({status: false, msg: "Please provide a Valid authorId"})
-    }
     
     if(!xyz){
         return res.status(400).send({status: false, msg : "No Blog with this Id exist"})
@@ -156,7 +137,6 @@ const putBlog = async function (req, res) {
 const deleteBlog = async function (req, res) {
   try {
     let blog = req.params.blogId
-    let authorId = req.query.authorId
     
     if(!blog){
         return res.status(400).send({status : false, msg : "blogId must be present in order to delete it"})
@@ -164,14 +144,6 @@ const deleteBlog = async function (req, res) {
        
     if(!mongoose.isValidObjectId(blog)){
         return res.status(400).send({status: false, msg: "Please provide a Valid blogId"})
-    }
-
-    if(!mongoose.isValidObjectId(authorId)){
-        return res.status(400).send({status: false, msg: "Please provide a Valid authorId"})
-    }
-    
-    if(decodeToken.authorId != data.authorId){
-        return res.status(400).send({status:false, msg :"You are not authorized to do this"})
     }
 
     if (! await blogModel.findById(blog)) {
@@ -206,15 +178,6 @@ const deleteBlog = async function (req, res) {
 const blogByQuery = async (req, res) =>{
   try {
     const data = req.query;
-    const authorId = req.query.authorId
-    
-    if(!mongoose.isValidObjectId(authorId)){
-        return res.status(400).send({status: false, msg: "Please provide a Valid authorId"})
-    }
-    
-    if(decodeToken.authorId != data.authorId){
-        return res.status(400).send({status:false, msg :"You are not authorized to do this"})
-    }
     
     if (Object.keys(data) == 0){    
       return res.status(400).send({ status: false, message: "No input provided" });

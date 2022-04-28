@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken")
-const express = require("express")
+const mongoose = require("mongoose")
 const secretKey = 'I thought i was smarter to do this-yet i did it anyway'
 
-const authorization = async function (req,res,next){
+const authorization = function (req,res,next){
     try{
-        let token = req.header['x-api-key'] || req.header['x-Api-key']
+        let token = req.headers['x-api-key']
         
         if(!token){
             return res.status(400).send({status : false, msg : "header is required"})
@@ -15,11 +15,20 @@ const authorization = async function (req,res,next){
             return res.status(400).send({status : false, msg : "this is an invalid token"})
         }
 
-        let authorId = req.body.authorId || req.params.authorId || req.query.authorId
-        if(decodeToken.authorId != authorId){
-            return res.status(400).send({status: false, msg : "You aren not authorized to do this"})
-        }
+        let authorId = req.body.authorId || req.params.authorId || req.query.authorId || req.headers.authorId
         
+        if(!authorId){
+            return res.status(400).send({status: false, msg : "AuthorId is required to do this action"})
+        }
+
+        if(! mongoose.isValidObjectId(authorId)){
+            return res.status(400).send({status: false, msg : "this is not a valid author Id"})
+        }
+
+        if(decodeToken.authorId != authorId){
+            return res.status(400).send({status: false, msg : "You aren't not authorized to do this"})
+        }
+
         next()
     }
 
