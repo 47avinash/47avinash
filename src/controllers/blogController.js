@@ -54,62 +54,40 @@ const getBlogs = async function (req, res) {
       let author = authorId.trim()
       let verifyAuthor = mongoose.isValidObjectId(author)
 
-      if (author.trim() === 0) {
-
+      if(author.trim() === 0) {
         return res.status(400).send({ status: false, msg: 'authorId must be present' })
       }
 
-
-      if (verifyAuthor == false) {
-
+      if(verifyAuthor == false) {
         return res.status(400).send({ status: false, msg: 'this is not a valid authorId' })
       }
     }
 
     if (category) {
-
       let verifyCategory = await blogModel.findOne({ category: category })
-
       if (!verifyCategory) {
-
         return res.status(400).send({ status: false, msg: 'No such category  exist' })
-
       }
-
-
     }
 
     if (tags) {
-
       let check = tags.length
-
       if (check === -1 || check == undefined || check == null) {
-
         return res.status(400).send({ status: false, msg: 'this is not a valid tag' })
-
-
       }
 
       if (!await blogModel.exist(tags)) {
-
         return res.status(400).send({ status: false, msg: 'no blog with this tag exist' })
       }
-
     }
 
     if (subcategory) {
-
       let check = subcategory.length
-
       if (check === -1 || check == undefined || check == null) {
-
         return res.status(400).send({ status: false, msg: 'this is not a valid subcategory' })
-
-
       }
 
       if (!await blogModel.exist(subcategory)) {
-
         return res.status(400).send({ status: false, msg: 'no blog with this subcategory exist' })
       }
     }
@@ -120,41 +98,39 @@ const getBlogs = async function (req, res) {
       return res
         .status(400)
         .send({ status: false, data: "No blogs can be found" });
-    } else {
+    } 
+    else {
       return res.status(200).send({ status: true, data: getSpecificBlogs });
     }
-  } catch (error) {
+} 
+    catch (error) {
     res.status(500).send({ status: false, msg: error.message });
   }
 };
 
+
+
+
+
 const putBlog = async function (req, res) {
 
   try {
-
     let data = req.body
 
     let id = req.params.blogId 
     if (!id) res.send("blogId must be present in request param ")
-
     let xyz = await blogModel.findById(id)
 
-
     let updatedBlog = await blogModel.findOneAndUpdate({ _id: id }, { $set: data }, { new: true })
-
     if (!updatedBlog) res.status(404).send({ msg: "we are not  able to update it " })
-
     res.status(200).send({ msg: updatedBlog })
   }
-
-
   catch (error) {
-
-
     res.status(500).send(error.message)
-
   }
 }
+
+
 
 
 
@@ -221,26 +197,51 @@ let deletedByQueryParams = async function (req, res) {
 
 const blogByQuery = async function (req, res) {
   try {
-    let data = req.query
-    const { category,
-      authorId,
-      tags,
-      subcategory,
-      isPublished } = req.query
-      
-      let blogId = req.query.blogId
+    let data = req.query 
+    const {authorId, tags, category, subcategory} = data
+    
+    if(!mongoose.isValidObjectId(authorId)){
+      return res.status(400).send({status : false, msg})
+    }
+    
+    if (tags) {
+        let check = tags.length
+        if (check === -1 || check == undefined || check == null) {
+          return res.status(400).send({ status: false, msg: 'this is not a valid tag' })
+        }
+  
+        if (!await blogModel.exist(tags)) {
+          return res.status(400).send({ status: false, msg: 'no blog with this tag exist' })
+        }
+      }
 
-      let findBlog = await blogModel.findById(blogId)
+    if (category) {
+        let verifyCategory = await blogModel.findOne({ category: category })
+        if (!verifyCategory) {
+          return res.status(400).send({ status: false, msg: 'No such category  exist' })
+        }
+    }
+  
+    if (subcategory) {
+        let check = subcategory.length
+        if (check === -1 || check === undefined || check === null) {
+          return res.status(400).send({ status: false, msg: 'this is not a valid subcategory' })
+        }
+  
+        if (!await blogModel.exist(subcategory)) {
+          return res.status(400).send({ status: false, msg: 'no blog with this subcategory exist' })
+        }
+      }
+    
+    let findBlog = await blogModel.findById({_id : req.query.blogId})
 
       if(findBlog.isdeleted===true){
- 
        return res.status(404).send({status:false,msg:'this blog has been deleted by user'})
       }
 
-
     let deletedBlog = await blogModel.updateMany(
       { $in: data },
-      { $set: { isDeleted: true }, deletedAt: Date.now() },
+      { $set: { isdeleted: true }, deletedAt: Date.now() },
       { new: true }
     )
 

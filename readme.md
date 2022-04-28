@@ -50,7 +50,7 @@ If the blog document doesn't exist then return an HTTP status of 404 with a body
 
 
 DELETE /blogs?queryParams
-Delete blog documents by category, authorid, tag name, subcategory name, unpublished
+Delete blog documents by category, , tagauthorid name, subcategory name, unpublished
 If the blog document doesn't exist then return an HTTP status of 404 with a body like this
 
 
