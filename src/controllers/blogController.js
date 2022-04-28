@@ -45,7 +45,7 @@ const getBlogs = async function (req, res) {
     if (category) {
       let verifyCategory = await blogModel.findOne({ category: category })
       if (!verifyCategory) {
-        return res.status(400).send({ status: false, msg: 'No such category  exist' })
+        return res.status(400).send({ status: false, msg: 'No blogs in this category exist' })
       }
     }
 
@@ -55,7 +55,7 @@ const getBlogs = async function (req, res) {
       }
 
       if (!await blogModel.exist(tags)) {
-        return res.status(400).send({ status: false, msg: 'no blog with this tag exist' })
+        return res.status(400).send({ status: false, msg: 'no blog with this tags exist' })
       }
     }
 
@@ -81,7 +81,7 @@ const getBlogs = async function (req, res) {
     }
 } 
     catch (error) {
-    res.status(500).send({ status: false, msg: error.message });
+    res.status(500).send({ status: false, err: error.message });
   }
 };
 
@@ -95,33 +95,29 @@ const putBlog = async function (req, res) {
   try {
     let data = req.body
 
-    let id = req.params.blogId 
-    let authorId = req.query.authorId
+    let id = req.params.blogId
     
     if(!id){ 
-        return res.send("blogId must be present in request param ")
+        return res.statu(400).send({status:false, msg :"blogId must be present in request param "})
+    }
+
+    if(!mongoose.isValidObjectId(id)){
+      return res.status(400).send({status: false, msg: "Please provide a Valid blogId"})
     }
 
     let xyz = await blogModel.findById(id)
-    
-    if(!mongoose.isValidObjectId(id)){
-        return res.status(400).send({status: false, msg: "Please provide a Valid blogId"})
-    }
-
-    if(!authorId){
-      return res.status(400).send({status:false, msg : "The authorId must be present"})
-    }
     
     if(!xyz){
         return res.status(400).send({status: false, msg : "No Blog with this Id exist"})
     }
 
-    let updatedBlog = await blogModel.findOneAndUpdate({ _id: id }, { $set: data }, { new: true })
+    let updatedBlog = await blogModel.findOneAndUpdate({ _id: id }, { $set: data }, { new: true, upsert : true })
+
     if (!updatedBlog) {
-        return res.status(404).send({ msg: "we are not  able to update it " })
+        return res.status(404).send({ msg: "we are not able to update it " })
     }
     else{ 
-        return res.status(200).send({ msg: updatedBlog })
+        return res.status(200).send({ status: false, data: updatedBlog })
     }
   }
   catch (error) {
@@ -178,7 +174,7 @@ const deleteBlog = async function (req, res) {
 const blogByQuery = async (req, res) =>{
   try {
     const data = req.query;
-    
+
     if (Object.keys(data) == 0){    
       return res.status(400).send({ status: false, message: "No input provided" });
     }
@@ -189,7 +185,7 @@ const blogByQuery = async (req, res) =>{
       return res.status(404).send({ status: false, message: "No such blog found" });
     } 
     else{
-    res.status(200).send({ status: true, message: deleteByQuery })
+    res.status(200).send({ status: true, data: deleteByQuery })
     }
 } 
   catch (error) {

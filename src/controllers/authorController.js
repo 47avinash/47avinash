@@ -61,7 +61,7 @@ const logInUser = async function (req, res){
          group : 49
      }, secretKey);
 
-     res.setHeader("x-api-key" , token , token.authorId )
+     res.setHeader("x-api-key" , token )
      res.status(200).send({status : true, msg : "logIn Successfull", data : token})
     }
     catch(err){

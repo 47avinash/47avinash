@@ -7,7 +7,7 @@ const authorization = function (req,res,next){
         let token = req.headers['x-api-key']
         
         if(!token){
-            return res.status(400).send({status : false, msg : "header is required"})
+            return res.status(400).send({status : false, msg : "neccessary header token is missing"})
         }
 
         let decodeToken = jwt.verify(token, secretKey)
@@ -15,7 +15,7 @@ const authorization = function (req,res,next){
             return res.status(400).send({status : false, msg : "this is an invalid token"})
         }
 
-        let authorId = req.body.authorId || req.params.authorId || req.query.authorId || req.headers.authorId
+        let authorId = req.body.authorId || req.params.authorId || req.query.authorId
         
         if(!authorId){
             return res.status(400).send({status: false, msg : "AuthorId is required to do this action"})
