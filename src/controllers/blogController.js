@@ -32,42 +32,12 @@ const createBlog = async function (req, res) {
 
 const getBlogs = async function (req, res) {
   try {
-
     let data = req.query;
     let filter = {
       isDeleted: false,
       isPublished: true,
       ...data,
     };
-    const { category, subcategory, tags } = data
-    
-
-    if (category) {
-      let verifyCategory = await blogModel.findOne({ category: category })
-      if (!verifyCategory) {
-        return res.status(400).send({ status: false, msg: 'No blogs in this category exist' })
-      }
-    }
-
-    if (tags) {
-      if (typeof(tags)!==[String]) {
-        return res.status(400).send({ status: false, msg: 'this is not a valid tag' })
-      }
-
-      if (!await blogModel.exist(tags)) {
-        return res.status(400).send({ status: false, msg: 'no blog with this tags exist' })
-      }
-    }
-
-    if (subcategory) {
-      if (typeof(subcategory) !== [String]) {
-        return res.status(400).send({ status: false, msg: 'this is not a valid subcategory' })
-      }
-
-      if (!await blogModel.exist(subcategory)) {
-        return res.status(400).send({ status: false, msg: 'no blog with this subcategory exist' })
-      }
-    }
 
     let getSpecificBlogs = await blogModel.find(filter);
 
@@ -179,6 +149,37 @@ const blogByQuery = async (req, res) =>{
     if (Object.keys(data) == 0){    
       return res.status(400).send({ status: false, message: "No input provided" });
     }
+    
+    const { category, subcategory, tags } = data
+    
+
+    if (category) {
+      let verifyCategory = await blogModel.findOne({ category: category })
+      if (!verifyCategory) {
+        return res.status(400).send({ status: false, msg: 'No blogs in this category exist' })
+      }
+    }
+
+    if (tags) {
+      if (typeof(tags)!==[String]) {
+        return res.status(400).send({ status: false, msg: 'this is not a valid tag' })
+      }
+
+      if (!await blogModel.exist(tags)) {
+        return res.status(400).send({ status: false, msg: 'no blog with this tags exist' })
+      }
+    }
+
+    if (subcategory) {
+      if (typeof(subcategory) !== [String]) {
+        return res.status(400).send({ status: false, msg: 'this is not a valid subcategory' })
+      }
+
+      if (!await blogModel.exist(subcategory)) {
+        return res.status(400).send({ status: false, msg: 'no blog with this subcategory exist' })
+      }
+    }
+
     const deleteByQuery = await blogModel.updateMany(data,{ isdeleted: true, deletedAt: new Date() },
       { new: true }               
     );

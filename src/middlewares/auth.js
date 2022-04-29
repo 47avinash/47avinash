@@ -25,7 +25,7 @@ const authorization = function (req,res,next){
             return res.status(400).send({status: false, msg : "this is not a valid author Id"})
         }
 
-        if(decodeToken.authorId != authorId){
+        if(decodeToken.authorId !== authorId){
             return res.status(400).send({status: false, msg : "You aren't not authorized to do this"})
         }
 
