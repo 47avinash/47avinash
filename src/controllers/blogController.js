@@ -133,6 +133,7 @@ const putBlog = async function (req, res) {
 const deleteBlog = async function (req, res) {
   try {
     let blog = req.params.blogId
+
     
     if(!blog){
         return res.status(400).send({status : false, msg : "blogId must be present in order to delete it"})

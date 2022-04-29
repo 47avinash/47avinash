@@ -1,6 +1,6 @@
 const {check, validationResult} = require("express-validator")
 
-exports.validateAuthor = [check('fname')
+exports.validateAuthor = [check('fname') 
     .trim()
     .not()
     .isEmpty().withMessage('First Name is Missing')
